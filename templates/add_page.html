@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Page</title>
+</head>
+<body>
+    <h2>Add Page</h2>
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="link" placeholder="Enter page URL">
+        <button type="submit">Add</button>
+    </form>
+    <h3>Pages</h3>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Total Links</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for page in page_obj %}
+                <tr>
+                    <td><a href="{% url 'page_detail' page.id %}">{{ page.name }}</a></td>
+                    <td>{{ page.total_links }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div>
+        <span>
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+        </span>
+        <span>
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <strong>{{ num }}</strong>
+                {% else %}
+                    <a href="?page={{ num }}">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+        </span>
+        <span>
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+</body>
+</html>
